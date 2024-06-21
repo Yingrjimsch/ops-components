@@ -4,9 +4,9 @@
 - op: replace
   path: /metadata/labels/app.kubernetes.io~1instance
   value: APP_INSTANCE_DATABASE-backup
-# - op: replace
-#   path: /metadata/name
-#   value: APP_INSTANCE_DATABASE-clone
+ - op: replace
+   path: /metadata/name
+   value: APP_INSTANCE_DATABASE-clone
 - op: add
   path: /spec/clone
   value: 
