@@ -1,0 +1,35 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: APP_INSTANCE_DATABASE-clone
+  labels:
+    team: APP_NAME_ABB
+spec:
+  teamId: "APP_NAME_ABB"
+  volume:
+    size: 5Gi
+    storageClass: data-hot
+  numberOfInstances: 2 #reoplicas
+  users:
+    dbadmin:  # database owner. Predefined roles: superuser, inherit, login, nologin, createrole, createdb, replication, bypassrls
+      - superuser
+      - createdb
+    grafanareadonly: [LOGIN, NOSUPERUSER, NOINHERIT, NOCREATEDB, NOCREATEROLE]
+  databases:
+    postgres: dbadmin
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 250m
+      memory: 512Mi
+  postgresql:
+    version: "14"
+    parameters:  # Expert section, Overwrite default values of postgresql.conf
+      max_connections: "99"
+      timezone: "Europe/Zurich"
+  #run postgresql container as postgresql user instead of root
+  spiloRunAsUser: 101
+  spiloRunAsGroup: 103
+  spiloFSGroup: 103

@@ -6,8 +6,10 @@ components:
 - ../postgres_ha
 
 patches:
-- path: patches/postgres-zalando-backup.yaml
+- path: ../../bases/backup/wal/patches/wal-backup-patch.yaml
   target:
     group: acid.zalan.do
     kind: postgresql
     version: v1
+    name: APP_INSTANCE_DATABASE
+    labelSelector: logformat=default

@@ -1,0 +1,83 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: APP_INSTANCE_DATABASE-backup
+  labels:
+    cronjob: backup
+    db-cluster: APP_INSTANCE_DATABASE
+spec:
+  suspend: false
+  # Cronjob schedule, set this according to your needs
+  schedule: '00 03 * * *'
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    metadata:
+      labels:
+        cronjob: backup
+        db-cluster: APP_INSTANCE_DATABASE
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            cronjob: backup
+            db-cluster: APP_INSTANCE_DATABASE
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: pg-backup
+            envFrom:
+              - configMapRef:
+                  name: APP_INSTANCE_DATABASE-backup
+            image: eu.gcr.io/aap-public/aap/postgres-backup:v1.1.0
+            args: ["--operation", "backup"]
+            resources:
+            # Adjust these values according to your needs. Depends on Size of the DB and Time accepted for taking backup
+              requests:
+                cpu: 20m
+                memory: 100Mi
+              limits:
+                memory: 250Mi
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 10001
+              runAsGroup: 10001
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              seccompProfile:
+                type: RuntimeDefault
+            volumeMounts:
+            - name: pg-backup-credentials
+              mountPath: /pgbr/postgresql/secrets
+              readOnly: true
+            - name: backup
+              mountPath: /pgbr/backup
+          volumes:
+          - name: backup
+            emptyDir: {}
+          - name: pg-backup-credentials
+            projected:
+              sources:
+              - secret:
+                  name: cluster-minio-backup
+                  items:
+                  - key: RESTIC_PASSWORD
+                    path: .restic_pwd
+                    mode: 292
+                  - key: AWS_ACCESS_KEY_ID
+                    path: .access_key_id
+                    mode: 292
+                  - key: AWS_SECRET_ACCESS_KEY
+                    path: .secret_access_key
+                    mode: 292
+              - secret:
+                  name: postgres.APP_INSTANCE_DATABASE.credentials.postgresql.acid.zalan.do
+                  items:
+                  - key: password
+                    path: .pg_password
+                    mode: 292

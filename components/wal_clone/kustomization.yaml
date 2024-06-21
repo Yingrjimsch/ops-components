@@ -1,13 +1,18 @@
+
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
-components:
-- ../postgres_ha
+resources: 
+- ../../bases/backup/wal
 
 patches:
 - path: patches/postgres.yaml
   target:
     group: acid.zalan.do
     kind: postgresql
-    name: APP_INSTANCE-database
     version: v1
+    name: APP_INSTANCE_DATABASE-clone
+    labelSelector: logformat=default
+
+replacements:
+- path: replacement.yaml

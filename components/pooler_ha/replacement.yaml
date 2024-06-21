@@ -5,7 +5,7 @@
   targets:
   - select:
       kind: Deployment
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     fieldPaths:
     - spec.template.spec.containers.*.env.*.valueFrom.secretKeyRef.name
     options:
@@ -13,7 +13,7 @@
       index: 1
   - select:
       kind: ConfigMap
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     reject:
       - labelSelector: ops=replacement
     fieldPaths:
@@ -29,28 +29,28 @@
   targets:
   - select:
       kind: ConfigMap
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     reject:
       - labelSelector: ops=replacement
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/instance]
+    - metadata.labels.[app.kubernetes.io/instance]
     options:
       delimiter: '-'
       index: 0
   - select:
       kind: Deployment
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/instance]
+    - metadata.labels.[app.kubernetes.io/instance]
     - spec.template.spec.containers.*.envFrom.*.configMapRef.name
     options:
       delimiter: '-'
       index: 0
   - select:
       kind: Service
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/instance]
+    - metadata.labels.[app.kubernetes.io/instance]
     options:
       delimiter: '-'
       index: 0
@@ -61,21 +61,21 @@
   targets:
   - select:
       kind: Deployment
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/name]
+    - metadata.labels.[app.kubernetes.io/name]
   - select:
       kind: ConfigMap
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     reject:
     - labelSelector: ops=replacement
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/name]
+    - metadata.labels.[app.kubernetes.io/name]
   - select:
       kind: Service
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/name]
+    - metadata.labels.[app.kubernetes.io/name]
 - source:
     fieldPath: data.APP_PART_OF
     kind: ConfigMap
@@ -83,19 +83,19 @@
   targets:
   - select:
       kind: Deployment
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/part-of]
+    - metadata.labels.[app.kubernetes.io/part-of]
   - select:
       kind: ConfigMap
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     reject:
     - labelSelector: ops=replacement
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/part-of]
+    - metadata.labels.[app.kubernetes.io/part-of]
   - select:
       kind: Service
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/part-of]
+    - metadata.labels.[app.kubernetes.io/part-of]
     

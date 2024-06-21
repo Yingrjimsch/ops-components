@@ -13,6 +13,6 @@ replacements:
   targets:
   - select:
       kind: ConfigMap
-      labelSelector: apps.kubernetes.io/component=pooler
+      labelSelector: app.kubernetes.io/component=pooler
     fieldPaths:
     - data.PGPOOL_PARAMS_BACKEND_HOSTNAME1

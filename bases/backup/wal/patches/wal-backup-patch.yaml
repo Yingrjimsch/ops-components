@@ -2,7 +2,7 @@
   path: /spec/env
   value:
   - name: WAL_S3_BUCKET  # backup to MinIo
-    value: "backups/xxx"  # bucket must exist already. "" value disables backup
+    value: "s3:http://backup-minio.cf-storage:9000/backups/APP_PART_OF/APP_NAME/APP_INSTANCE_DATABASE/ENV"  # bucket must exist already. "" value disables backup
   - name: BACKUP_SCHEDULE
     value: '15 03 * * *'  #The schedule in cron format when a basebackup should be made. Time of Spilo Image (UTC)
   - name: BACKUP_NUM_TO_RETAIN
@@ -24,6 +24,6 @@
   - name: AWS_S3_FORCE_PATH_STYLE
     value:  "true" # needed for MinIO
   - name: AWS_ENDPOINT
-    value: http://backup-minio.cf-storage:9000  # Endpoint URL to MinIO.
+    value: http://backup-minio.cf-storage:9000 # Endpoint URL to MinIO.
   - name: WALG_DISABLE_S3_SSE
     value:  "true" #Disables the backup encryption..

@@ -43,6 +43,28 @@ spec:
           requests:
             cpu: 75m
             memory: 150Mi
+        livenessProbe:
+          failureThreshold: 6
+          initialDelaySeconds: 20
+          periodSeconds: 120
+          successThreshold: 1
+          timeoutSeconds: 5
+          exec:
+            command:
+              - bash
+              - -ec
+              - 'PGPASSWORD=${POSTGRES_PASSWORD} psql -U "postgres" -d "postgres" -p 9999 -h /tmp -tA -c "SELECT 1" >/dev/null'
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+          exec:
+            command:
+              - bash
+              - -ec
+              - 'PGPASSWORD=${POSTGRES_PASSWORD} psql -U "postgres" -d "postgres" -p 9999 -h /tmp -tA -c "SELECT 1" >/dev/null'
       - name: pgpool-stats
         image: pgpool/pgpool2_exporter:1.2.2
         env:

@@ -5,12 +5,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      apps.kubernetes.io/instance: APP_INSTANCE
-      apps.kubernetes.io/component: service
+      app.kubernetes.io/instance: APP_INSTANCE
+      app.kubernetes.io/component: service
   endpoints:
     - port: http
   podTargetLabels:
-    - apps.kubernetes.io/component
-    - apps.kubernetes.io/instance
-    - apps.kubernetes.io/name
-    - apps.kubernetes.io/part-of
+    - app.kubernetes.io/component
+    - app.kubernetes.io/instance
+    - app.kubernetes.io/name
+    - app.kubernetes.io/part-of

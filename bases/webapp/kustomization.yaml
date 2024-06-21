@@ -4,10 +4,10 @@ kind: Kustomization
 labels:
 - includeSelectors: true
   pairs:
-    apps.kubernetes.io/component: webapp
-    apps.kubernetes.io/instance: APP_INSTANCE
-    apps.kubernetes.io/name: APP_NAME
-    apps.kubernetes.io/part-of: APP_PART_OF
+    app.kubernetes.io/component: webapp
+    app.kubernetes.io/instance: APP_INSTANCE
+    app.kubernetes.io/name: APP_NAME
+    app.kubernetes.io/part-of: APP_PART_OF
     logformat: default
 
 resources:

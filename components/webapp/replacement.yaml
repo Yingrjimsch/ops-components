@@ -5,7 +5,7 @@
   targets:
   - select:
       kind: Deployment
-      labelSelector: apps.kubernetes.io/component=webapp
+      labelSelector: app.kubernetes.io/component=webapp
     fieldPaths:
     - spec.template.spec.imagePullSecrets.0.name
     options:
@@ -18,27 +18,27 @@
   targets:
   - select:
       kind: Deployment
-      labelSelector: apps.kubernetes.io/component=webapp
+      labelSelector: app.kubernetes.io/component=webapp
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/instance]
+    - metadata.labels.[app.kubernetes.io/instance]
     - spec.template.spec.containers.0.name
     options:
       delimiter: '-'
       index: 0
   - select:
       kind: Service
-      labelSelector: apps.kubernetes.io/component=webapp
+      labelSelector: app.kubernetes.io/component=webapp
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/instance]
+    - metadata.labels.[app.kubernetes.io/instance]
     options:
       delimiter: '-'
       index: 0
   - select:
       kind: ServiceMonitor
-      labelSelector: apps.kubernetes.io/component=webapp
+      labelSelector: app.kubernetes.io/component=webapp
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/instance]
-    - spec.selector.matchLabels.[apps.kubernetes.io/instance]
+    - metadata.labels.[app.kubernetes.io/instance]
+    - spec.selector.matchLabels.[app.kubernetes.io/instance]
     options:
       delimiter: '-'
       index: 0
@@ -49,25 +49,25 @@
   targets:
   - select:
       kind: Deployment
-      labelSelector: apps.kubernetes.io/component=webapp
+      labelSelector: app.kubernetes.io/component=webapp
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/name]
+    - metadata.labels.[app.kubernetes.io/name]
     options:
       delimiter: '-'
       index: 0
   - select:
       kind: Service
-      labelSelector: apps.kubernetes.io/component=webapp
+      labelSelector: app.kubernetes.io/component=webapp
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/name]
+    - metadata.labels.[app.kubernetes.io/name]
     options:
       delimiter: '-'
       index: 0
   - select:
       kind: ServiceMonitor
-      labelSelector: apps.kubernetes.io/component=webapp
+      labelSelector: app.kubernetes.io/component=webapp
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/name]
+    - metadata.labels.[app.kubernetes.io/name]
     options:
       delimiter: '-'
       index: 0
@@ -78,25 +78,25 @@
   targets:
   - select:
       kind: Deployment
-      labelSelector: apps.kubernetes.io/component=webapp
+      labelSelector: app.kubernetes.io/component=webapp
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/part-of]
+    - metadata.labels.[app.kubernetes.io/part-of]
     options:
       delimiter: '-'
       index: 0
   - select:
       kind: Service
-      labelSelector: apps.kubernetes.io/component=webapp
+      labelSelector: app.kubernetes.io/component=webapp
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/part-of]
+    - metadata.labels.[app.kubernetes.io/part-of]
     options:
       delimiter: '-'
       index: 0
   - select:
       kind: ServiceMonitor
-      labelSelector: apps.kubernetes.io/component=webapp
+      labelSelector: app.kubernetes.io/component=webapp
     fieldPaths:
-    - metadata.labels.[apps.kubernetes.io/part-of]
+    - metadata.labels.[app.kubernetes.io/part-of]
     options:
       delimiter: '-'
       index: 0

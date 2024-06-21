@@ -4,10 +4,10 @@ kind: Kustomization
 labels:
 - includeSelectors: true
   pairs:
-    apps.kubernetes.io/component: pooler
-    apps.kubernetes.io/instance: APP_INSTANCE-pgpool
-    apps.kubernetes.io/name: APP_NAME
-    apps.kubernetes.io/part-of: APP_PART_OF
+    app.kubernetes.io/component: pooler
+    app.kubernetes.io/instance: APP_INSTANCE-pgpool
+    app.kubernetes.io/name: APP_NAME
+    app.kubernetes.io/part-of: APP_PART_OF
     logformat: pgpool
 
 resources:

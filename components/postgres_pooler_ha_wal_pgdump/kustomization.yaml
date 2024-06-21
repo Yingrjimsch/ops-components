@@ -1,6 +1,7 @@
+
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
 components:
-- ../postgres_ha_wal
-- ../pooler_ha
+- ../postgres_pooler_ha_wal
+- ../pgdump

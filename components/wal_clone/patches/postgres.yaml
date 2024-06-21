@@ -1,0 +1,40 @@
+- op: replace
+  path: /metadata/labels/app.kubernetes.io~1component
+  value: database-backup
+- op: replace
+  path: /metadata/labels/app.kubernetes.io~1instance
+  value: APP_INSTANCE_DATABASE-backup
+# - op: replace
+#   path: /metadata/name
+#   value: APP_INSTANCE_DATABASE-clone
+- op: add
+  path: /spec/clone
+  value: 
+    cluster: "cluster-minio-backup"          # DB cluster backups to clone from
+    timestamp: "2024-06-10T11:00:00+00:00"  # If ommited clone directly from original cluster, not from backups. timestamp must be after the last fullbackup and can be way after the last archived wal file.
+    s3_wal_path: "s3://backups/pro/spilo/NAMESPACE-APP_INSTANCE_DATABASE/wal/14"
+- op: add
+  path: /metadata/annotations
+  value:
+    delete-clustername: "APP_INSTANCE_DATABASE-clone"
+- op: add
+  path: /spec/env
+  value:
+  - name: WAL_S3_BUCKET  # backup to MinIo
+    value: "" 
+  - name: WAL_S3_PREFIX
+    value: ""
+  - name: CLONE_USE_WALG_RESTORE
+    value:  "true"  #Controls the number of WAL-G backups which should reside on your S3 storage
+  - name: CLONE_AWS_ACCESS_KEY_ID
+    valueFrom:
+        secretKeyRef:
+          key: AWS_ACCESS_KEY_ID
+          name: cluster-minio-backup
+  - name: CLONE_AWS_SECRET_ACCESS_KEY
+    valueFrom:
+        secretKeyRef:
+          key: AWS_SECRET_ACCESS_KEY
+          name: cluster-minio-backup
+  - name: CLONE_AWS_ENDPOINT
+    value: http://backup-minio.cf-storage:9000 # Endpoint URL to MinIO.

@@ -3,10 +3,10 @@ kind: Kustomization
 
 labels:
 - pairs:
-    apps.kubernetes.io/componet: grafana
-    apps.kubernetes.io/instance: APP_INSTANCE_DATABASE
-    apps.kubernetes.io/name: APP_NAME
-    apps.kubernetes.io/part-of: APP_PART_OF
+    app.kubernetes.io/componet: grafana
+    app.kubernetes.io/instance: APP_INSTANCE_DATABASE
+    app.kubernetes.io/name: APP_NAME
+    app.kubernetes.io/part-of: APP_PART_OF
 
 resources:
 - grafana-datensource.yaml

@@ -1,0 +1,81 @@
+- source:
+    fieldPath: data.APP_INSTANCE_DATABASE
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: CronJob
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - metadata.labels.[app.kubernetes.io/instance]
+    - metadata.labels.db-cluster
+    - spec.jobTemplate.metadata.labels.db-cluster
+    - spec.jobTemplate.spec.template.metadata.labels.db-cluster
+  - select:
+      kind: CronJob
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - spec.jobTemplate.spec.template.spec.volumes.[name=pg-backup-credentials].projected.sources.1.secret.name
+    options:
+      delimiter: '.'
+      index: 1
+  - select:
+      kind: ConfigMap
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - metadata.labels.[app.kubernetes.io/instance]
+    - data.PGHOST
+  - select:
+      kind: ConfigMap
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - data.RESTIC_REPOSITORY
+    options:
+      delimiter: '/'
+      index: 6
+- source:
+    fieldPath: data.APP_NAME
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: CronJob
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - metadata.labels.[app.kubernetes.io/name]
+  - select:
+      kind: ConfigMap
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - metadata.labels.[app.kubernetes.io/name]
+  - select:
+      kind: ConfigMap
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - data.RESTIC_REPOSITORY
+    options:
+      delimiter: '/'
+      index: 5
+- source:
+    fieldPath: data.APP_PART_OF
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: CronJob
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - metadata.labels.[app.kubernetes.io/part-of]
+  - select:
+      kind: ConfigMap
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - metadata.labels.[app.kubernetes.io/part-of]
+  - select:
+      kind: ConfigMap
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - data.RESTIC_REPOSITORY
+    options:
+      delimiter: '/'
+      index: 4

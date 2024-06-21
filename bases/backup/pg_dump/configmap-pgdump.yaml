@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: APP_INSTANCE_DATABASE-backup
+data:
+  # RETENTION is an optional setting. 
+  # If set the retention policy is configured accordingly. 
+  # Default retention policy is 6 daily, 3 weekly, 11 monthly, 1 yearl
+  # Retention policy has to be set in the following manner: hourly-daily-weekly-monthly-yearly.
+  # Example 0-6-3-11-1 represents the default retetntion policy.
+  # If the retention policy is not set exactly like this, the default policy will be applied automatically.
+  RETENTION: '0-1-3-11-1'
+
+  # Set KEEP_LAST if you want to keep n last snapshots
+  KEEP_LAST: '2'
+
+  # Name of the pg-cluster to backup
+  PGHOST: 'APP_INSTANCE_DATABASE'
+
+  # User used to take the dump. This user needs to have access to all databeses in the cluster default is postgres
+  PGUSER: 'postgres'
+
+  # The target database to connect / backup / restore
+  PGDATABASE: 'postgres'
+
+  # The database schema to target for backup / restore
+  PG_DATABASE_SCHEMA_NAME: 'public'
+
+  # Define the version of your pg-cluster. available values: 11,12,13,14,15 or 16
+  PG_VERSION: '14'
+
+  # The pg backup operation {pg_dump|pg_dumpall}. When using pg_dumpall, 'PG_RESTORE_OPERATIONPG_RESTORE_OPERATION' should be 'psql'.
+  PG_BACKUP_OPERATION: 'pg_dump'
+
+  # Additional pg backup operation args. Leave empty to use defaults.
+  PG_BACKUP_OPERATION_ARGS: '-O -x -b -c'
+
+  # The pg restore operation {pg_restore|psql}
+  PG_RESTORE_OPERATION: 'pg_restore'
+
+  # Additional pg restore operation args. Leave empty to use defaults.
+  PG_RESTORE_OPERATION_ARGS: ''
+
+  # Destination path for backups
+  RESTIC_REPOSITORY: 's3:http://backup-minio.cf-storage:9000/backups/APP_PART_OF/APP_NAME/APP_INSTANCE_DATABASE/ENV'

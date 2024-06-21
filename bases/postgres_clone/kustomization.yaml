@@ -4,13 +4,11 @@ kind: Kustomization
 labels:
 - includeSelectors: true
   pairs:
-    app.kubernetes.io/component: service
-    app.kubernetes.io/instance: APP_INSTANCE
+    app.kubernetes.io/component: database
+    app.kubernetes.io/instance: APP_INSTANCE_DATABASE
     app.kubernetes.io/name: APP_NAME
     app.kubernetes.io/part-of: APP_PART_OF
     logformat: default
 
 resources:
-- deployment.yaml
-- service-monitor.yaml
-- service.yaml
+- postgres.yaml

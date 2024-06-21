@@ -27,7 +27,7 @@
   - select:
       kind: GrafanaDatasource
     fieldPaths:
-      - metadata.labels.[apps.kubernetes.io/instance]
+      - metadata.labels.[app.kubernetes.io/instance]
     options:
       delimiter: '-'
       index: 0
@@ -39,7 +39,7 @@
   - select:
       kind: GrafanaDatasource
     fieldPaths:
-      - metadata.labels.[apps.kubernetes.io/name]
+      - metadata.labels.[app.kubernetes.io/name]
 - source:
     fieldPath: data.APP_PART_OF
     kind: ConfigMap
@@ -48,5 +48,5 @@
   - select:
       kind: GrafanaDatasource
     fieldPaths:
-      - metadata.labels.[apps.kubernetes.io/part-of]
+      - metadata.labels.[app.kubernetes.io/part-of]
 

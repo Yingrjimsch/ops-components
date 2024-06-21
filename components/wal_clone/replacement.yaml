@@ -5,7 +5,7 @@
   targets:
   - select:
       kind: postgresql
-      labelSelector: app.kubernetes.io/component=database
+      labelSelector: app.kubernetes.io/component=database-backup
     fieldPaths:
     - metadata.labels.team
     - spec.teamId
@@ -16,7 +16,7 @@
   targets:
   - select:
       kind: postgresql
-      labelSelector: app.kubernetes.io/component=database
+      labelSelector: app.kubernetes.io/component=database-backup
     fieldPaths:
       - spec.sidecars.*.env.*.valueFrom.secretKeyRef.name
     options:
@@ -24,15 +24,23 @@
       index: 1
   - select:
       kind: postgresql
-      labelSelector: app.kubernetes.io/component=database
+      labelSelector: app.kubernetes.io/component=database-backup
     fieldPaths:
     - metadata.labels.[app.kubernetes.io/instance]
+    - metadata.annotations.delete-clustername
+    options:
+      delimiter: '-'
+      index: 0
   - select:
-      kind: PodMonitor
-      labelSelector: app.kubernetes.io/component=database
+      kind: Job
+      labelSelector: app.kubernetes.io/component=database-backup
     fieldPaths:
+    - metadata.name
     - metadata.labels.[app.kubernetes.io/instance]
-    - spec.selector.matchLabels.[app.kubernetes.io/instance]
+    - spec.template.spec.containers.*.name
+    options:
+      delimiter: '-'
+      index: 0
 - source:
     fieldPath: data.APP_NAME
     kind: ConfigMap
@@ -40,12 +48,12 @@
   targets:
   - select:
       kind: postgresql
-      labelSelector: app.kubernetes.io/component=database
+      labelSelector: app.kubernetes.io/component=database-backup
     fieldPaths:
     - metadata.labels.[app.kubernetes.io/name]
   - select:
-      kind: PodMonitor
-      labelSelector: app.kubernetes.io/component=database
+      kind: Job
+      labelSelector: app.kubernetes.io/component=database-backup
     fieldPaths:
     - metadata.labels.[app.kubernetes.io/name]
 - source:
@@ -55,11 +63,24 @@
   targets:
   - select:
       kind: postgresql
-      labelSelector: app.kubernetes.io/component=database
+      labelSelector: app.kubernetes.io/component=database-backup
     fieldPaths:
     - metadata.labels.[app.kubernetes.io/part-of]
   - select:
-      kind: PodMonitor
-      labelSelector: app.kubernetes.io/component=database
+      kind: Job
+      labelSelector: app.kubernetes.io/component=database-backup
     fieldPaths:
     - metadata.labels.[app.kubernetes.io/part-of]
+- source:
+    fieldPath: data.APP_INSTANCE
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: Job
+      labelSelector: app.kubernetes.io/component=database-backup
+    fieldPaths:
+    - spec.template.spec.containers.*.envFrom.*.configMapRef.name
+    options:
+      delimiter: '-'
+      index: 0
