@@ -1,0 +1,3 @@
+- op: add
+  path: /data/PGPOOL_PARAMS_NUM_INIT_CHILDREN
+  value: "48"

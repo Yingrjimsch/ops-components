@@ -1,0 +1,65 @@
+- source:
+    fieldPath: data.APP_NAME_ABB
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: postgresql
+      labelSelector: apps.kubernetes.io/component=database
+    fieldPaths:
+    - metadata.labels.team
+    - spec.teamId
+- source:
+    fieldPath: data.APP_INSTANCE_DATABASE
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: postgresql
+      labelSelector: apps.kubernetes.io/component=database
+    fieldPaths:
+      - spec.sidecars.*.env.*.valueFrom.secretKeyRef.name
+    options:
+      delimiter: '.'
+      index: 1
+  - select:
+      kind: postgresql
+      labelSelector: apps.kubernetes.io/component=database
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/instance]
+  - select:
+      kind: PodMonitor
+      labelSelector: apps.kubernetes.io/component=database
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/instance]
+    - spec.selector.matchLabels.[apps.kubernetes.io/instance]
+- source:
+    fieldPath: data.APP_NAME
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: postgresql
+      labelSelector: apps.kubernetes.io/component=database
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/name]
+  - select:
+      kind: PodMonitor
+      labelSelector: apps.kubernetes.io/component=database
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/name]
+- source:
+    fieldPath: data.APP_PART_OF
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: postgresql
+      labelSelector: apps.kubernetes.io/component=database
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/part-of]
+  - select:
+      kind: PodMonitor
+      labelSelector: apps.kubernetes.io/component=database
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/part-of]

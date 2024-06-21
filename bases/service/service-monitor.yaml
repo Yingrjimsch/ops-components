@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: APP_INSTANCE
+spec:
+  selector:
+    matchLabels:
+      apps.kubernetes.io/instance: APP_INSTANCE
+      apps.kubernetes.io/component: service
+  endpoints:
+    - port: http
+  podTargetLabels:
+    - apps.kubernetes.io/component
+    - apps.kubernetes.io/instance
+    - apps.kubernetes.io/name
+    - apps.kubernetes.io/part-of

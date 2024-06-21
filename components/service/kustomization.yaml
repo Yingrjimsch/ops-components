@@ -1,0 +1,14 @@
+
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+components:
+- ../service_db
+
+patches:
+- path: patches/deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: APP_INSTANCE
+    version: v1

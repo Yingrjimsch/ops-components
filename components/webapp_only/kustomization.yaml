@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+components:
+- ../webapp
+
+patches:
+- patch: |-
+    - op: remove
+      path: /spec/template/spec/containers/1
+  target:
+    group: apps
+    kind: Deployment
+    name: APP_INSTANCE
+    version: v1
+- patch: |-
+    - op: remove
+      path: /spec/ports/1
+  target:
+    kind: Service
+    name: APP_INSTANCE
+    version: v1
+- patch: |-
+    apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: APP_INSTANCE
+    $patch: delete

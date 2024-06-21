@@ -1,0 +1,112 @@
+- source:
+    fieldPath: data.APP_INSTANCE_DATABASE
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: Deployment
+      labelSelector: apps.kubernetes.io/component=pooler
+    fieldPaths:
+    - spec.template.spec.containers.*.env.*.valueFrom.secretKeyRef.name
+    options:
+      delimiter: '.'
+      index: 1
+- source:
+    fieldPath: data.APP_INSTANCE
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: Deployment
+      labelSelector: apps.kubernetes.io/component=pooler
+    fieldPaths:
+#    - metadata.name
+    - metadata.labels.[apps.kubernetes.io/instance]
+    - spec.template.spec.containers.*.envFrom.*.configMapRef.name
+    options:
+      delimiter: '-'
+      index: 0
+  - select:
+      kind: ConfigMap
+      labelSelector: apps.kubernetes.io/component=pooler
+    reject:
+      - labelSelector: ops=replacement
+    fieldPaths:
+#    - metadata.name
+    - metadata.labels.[apps.kubernetes.io/instance]
+    - data.PGPOOL_PARAMS_BACKEND_HOSTNAME0
+    - data.PGPOOL_PARAMS_BACKEND_HOSTNAME1
+    options:
+      delimiter: '-'
+      index: 0
+  - select:
+      kind: Service
+      labelSelector: apps.kubernetes.io/component=pooler
+    fieldPaths:
+#    - metadata.name
+    - metadata.labels.[apps.kubernetes.io/instance]
+    options:
+      delimiter: '-'
+      index: 0
+- source:
+    fieldPath: data.APP_NAME
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: Deployment
+      labelSelector: apps.kubernetes.io/component=pooler
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/name]
+    options:
+      delimiter: '-'
+      index: 0
+  - select:
+      kind: ConfigMap
+      labelSelector: apps.kubernetes.io/component=pooler
+    reject:
+    - labelSelector: ops=replacement
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/name]
+    options:
+      delimiter: '-'
+      index: 0
+  - select:
+      kind: Service
+      labelSelector: apps.kubernetes.io/component=pooler
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/name]
+    options:
+      delimiter: '-'
+      index: 0
+- source:
+    fieldPath: data.APP_PART_OF
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: Deployment
+      labelSelector: apps.kubernetes.io/component=pooler
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/part-of]
+    options:
+      delimiter: '-'
+      index: 0
+  - select:
+      kind: ConfigMap
+      labelSelector: apps.kubernetes.io/component=pooler
+    reject:
+    - labelSelector: ops=replacement
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/part-of]
+    options:
+      delimiter: '-'
+      index: 0
+  - select:
+      kind: Service
+      labelSelector: apps.kubernetes.io/component=pooler
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/part-of]
+    options:
+      delimiter: '-'
+      index: 0

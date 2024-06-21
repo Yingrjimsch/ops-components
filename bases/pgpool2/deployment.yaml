@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: APP_INSTANCE-pgpool
+spec:
+  replicas: 1
+  template:
+    spec:
+      imagePullSecrets:
+      - name: pull-secret
+      containers:
+      - name: pgpool
+        image: bitnami/pgpool2:4.5.0
+        env:
+        - name: DBADMIN_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: dbadmin.APP_INSTANCE_DATABASE.credentials.postgresql.acid.zalan.do
+              key: username
+        - name: DBADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dbadmin.APP_INSTANCE_DATABASE.credentials.postgresql.acid.zalan.do
+              key: password
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres.APP_INSTANCE_DATABASE.credentials.postgresql.acid.zalan.do
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres.APP_INSTANCE_DATABASE.credentials.postgresql.acid.zalan.do
+              key: password
+        envFrom:
+        - configMapRef:
+            name: APP_INSTANCE-pgpool-configmap
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 150m
+            memory: 300Mi
+          requests:
+            cpu: 75m
+            memory: 150Mi
+      - name: pgpool-stats
+        image: pgpool/pgpool2_exporter:1.2.2
+        env:
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres.APP_INSTANCE_DATABASE.credentials.postgresql.acid.zalan.do
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres.APP_INSTANCE_DATABASE.credentials.postgresql.acid.zalan.do
+              key: password
+        - name: POSTGRES_DATABASE
+          value: "postgres"
+        - name: PGPOOL_SERVICE
+          value: "localhost"
+        - name: PGPOOL_SERVICE_PORT
+          value: "9999"
+        - name: SSLMODE
+          value: "require"
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 80m
+            memory: 120Mi
+          requests:
+            cpu: 50m
+            memory: 80Mi

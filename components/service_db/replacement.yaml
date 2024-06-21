@@ -1,0 +1,90 @@
+- source:
+    fieldPath: data.APP_NAME_ABB
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: Deployment
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+    - spec.template.spec.imagePullSecrets.0.name
+    options:
+      delimiter: '-'
+      index: 0
+- source:
+    fieldPath: data.APP_INSTANCE_DATABASE
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: Deployment
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+      - spec.template.spec.containers.*.env.*.valueFrom.secretKeyRef.name
+    options:
+      delimiter: '.'
+      index: 1
+- source:
+    fieldPath: data.APP_INSTANCE
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: Deployment
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/instance]
+    - spec.template.spec.containers.*.name
+    - spec.template.spec.containers.*.envFrom.*.secretRef.name
+    - spec.template.spec.containers.*.envFrom.*.configMapRef.name
+  - select:
+      kind: Service
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/instance]
+  - select:
+      kind: ServiceMonitor
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/instance]
+    - spec.selector.matchLabels.[apps.kubernetes.io/instance]
+- source:
+    fieldPath: data.APP_NAME
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: Deployment
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/name]
+  - select:
+      kind: Service
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/name]
+  - select:
+      kind: ServiceMonitor
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/name]
+- source:
+    fieldPath: data.APP_PART_OF
+    kind: ConfigMap
+    name: ops-envconfig-overlay
+  targets:
+  - select:
+      kind: Deployment
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/part-of]
+  - select:
+      kind: Service
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/part-of]
+  - select:
+      kind: ServiceMonitor
+      labelSelector: apps.kubernetes.io/component=service
+    fieldPaths:
+    - metadata.labels.[apps.kubernetes.io/part-of]

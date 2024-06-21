@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: APP_INSTANCE
+spec:
+  ports:
+    - port: 80
+      targetPort: http
+      name: http
+    - port: 9113
+      targetPort: ngmon
+      name: ngmon
