@@ -12,4 +12,4 @@ labels:
 
 resources:
 - secret-clone-job.yaml
-- postgres.yaml
+  #- postgres.yaml
