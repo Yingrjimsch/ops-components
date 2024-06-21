@@ -6,7 +6,7 @@ components:
 - ../postgres_ha
 
 patches:
-- path: ../../bases/backup/wal/patches/wal-backup-patch.yaml
+- path: postgres-zalando-backup.yaml
   target:
     group: acid.zalan.do
     kind: postgresql
